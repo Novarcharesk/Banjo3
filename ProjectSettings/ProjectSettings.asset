@@ -883,7 +883,7 @@ PlayerSettings:
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   metroPackageName: Banjo3
-  metroPackageVersion: 
+  metroPackageVersion: 1.0.0.0
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
@@ -891,7 +891,7 @@ PlayerSettings:
   metroCertificateNotAfter: 0000000000000000
   metroApplicationDescription: Banjo3
   wsaImages: {}
-  metroTileShortName: 
+  metroTileShortName: Banjo3
   metroTileShowName: 0
   metroMediumTileShowName: 0
   metroLargeTileShowName: 0
