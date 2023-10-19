@@ -1,34 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.UI;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class UIManager : MonoBehaviour
 {
-    public TMP_Text jiggyText; // Reference to the TextMeshPro Text element for Jiggies
-    public TMP_Text healthText; // Reference to the TextMeshPro Text element for Health
-
+    public TMP_Text jiggyText; // Reference to the TextMeshPro Text element
+    public GameObject gameoverScreen; // Reference to the game over screen GameObject
     private int collectedJiggies = 0; // Variable to track the collected Jiggies
-    private int playerHealth = 100; // Variable to track the player's health
 
-    public GameManager gameManager; // Reference to the GameManager
+    // Start is called before the first frame update
+    void Start()
+    {
+        // Hide the game over screen initially
+        gameoverScreen.SetActive(false);
+    }
 
     // Update the UI Text with the collected Jiggies count
     private void UpdateJiggyUI()
     {
         if (jiggyText != null)
         {
-            jiggyText.text = "Jiggies: " + collectedJiggies.ToString(); // Update the UI Text for Jiggies
-        }
-    }
-
-    // Update the UI Text with the player's health count
-    private void UpdateHealthUI()
-    {
-        if (healthText != null)
-        {
-            healthText.text = "Health: " + playerHealth.ToString(); // Update the UI Text for Health
+            jiggyText.text = "Jiggies: " + collectedJiggies.ToString(); // Update the UI Text
         }
     }
 
@@ -37,15 +32,17 @@ public class UIManager : MonoBehaviour
     {
         collectedJiggies++; // Increment the collected Jiggies count
         UpdateJiggyUI();
-
-        // Add points to the player's score through the GameManager
-        gameManager.AddPoints(1); // Adjust the number of points as needed
     }
 
-    // Method to update the player's health count in the UI
-    public void UpdatePlayerHealth(int newHealth)
+    // Method to display the game over screen
+    public void ShowGameoverScreen()
     {
-        playerHealth = newHealth; // Update the player's health count
-        UpdateHealthUI();
+        gameoverScreen.SetActive(true);
+    }
+
+    // Method to reload the scene
+    public void ReloadScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

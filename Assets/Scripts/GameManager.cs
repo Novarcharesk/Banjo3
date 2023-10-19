@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -58,6 +59,12 @@ public class GameManager : MonoBehaviour
         scoreText.text = "Score: " + playerScore.ToString();
 
         // Add any additional scoring logic
+    }
+
+    public void ReloadGame()
+    {
+        // Use the SceneManager to reload the current scene
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     // Add any other game management functions and logic here
