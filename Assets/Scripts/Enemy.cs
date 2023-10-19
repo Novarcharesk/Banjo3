@@ -1,36 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.XR;
 
 public class Enemy : MonoBehaviour
 {
     public int maxHealth = 100;
     public float moveSpeed = 2.0f;
-    public float playerRecoilForce = 10.0f; // Recoil force when getting close to the player
-    public float moveDuration = 2.0f; // Duration for each movement step
-    public float stopDuration = 1.0f; // Duration to pause between steps
 
+    private Transform player;
     private Vector3 startPosition;
     private int currentHealth;
     private EnemySpawner spawner; // Reference to the spawner
-    private Transform player; // Assign the player's transform in the Inspector
-    private float timeSinceLastMove; // Timer to track movement time
-    private bool isMoving; // Flag to indicate if the enemy is moving
+    public float playerRecoilForce = 10.0f;
 
-    private InputDevice headsetDevice;
+    private bool isPursuing = false;
 
     private void Start()
     {
+        player = Camera.main.transform; // Assuming the player's camera is the main camera in your VR scene
         startPosition = transform.position;
         currentHealth = maxHealth;
-
-        // Find the headset device
-        headsetDevice = InputDevices.GetDeviceAtXRNode(XRNode.Head);
-
-        // Initialize the timer and movement state
-        timeSinceLastMove = 0f;
-        isMoving = true;
     }
 
     private void Update()
@@ -41,45 +30,28 @@ public class Enemy : MonoBehaviour
             return;
         }
 
-        // Get the player's head position in VR
-        Vector3 playerHeadPosition = Vector3.zero;
+        // Calculate the distance to the player
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
-        if (headsetDevice != null)
+        // Modify the pursuit logic to suit your needs
+        if (distanceToPlayer < 0.5f)
         {
-            headsetDevice.TryGetFeatureValue(CommonUsages.devicePosition, out playerHeadPosition);
-        }
-
-        // Determine the enemy's movement behavior
-        if (isMoving)
-        {
-            // Continue moving towards the player
-            PursuePlayer(playerHeadPosition);
-            timeSinceLastMove += Time.deltaTime;
-
-            if (timeSinceLastMove >= moveDuration)
-            {
-                // Stop for a second
-                timeSinceLastMove = 0f;
-                isMoving = false;
-            }
+            isPursuing = true;
         }
         else
         {
-            // Stop for a second
-            timeSinceLastMove += Time.deltaTime;
+            isPursuing = false;
+        }
 
-            if (timeSinceLastMove >= stopDuration)
-            {
-                // Resume moving
-                isMoving = true;
-                timeSinceLastMove = 0f;
-            }
+        if (isPursuing)
+        {
+            PursuePlayer();
         }
     }
 
-    private void PursuePlayer(Vector3 targetPosition)
+    private void PursuePlayer()
     {
-        Vector3 directionToPlayer = targetPosition - transform.position;
+        Vector3 directionToPlayer = player.position - transform.position;
         directionToPlayer.Normalize();
         transform.position += directionToPlayer * moveSpeed * Time.deltaTime;
     }
