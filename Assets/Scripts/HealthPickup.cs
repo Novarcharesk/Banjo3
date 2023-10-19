@@ -5,6 +5,14 @@ using UnityEngine;
 public class HealthPickup : MonoBehaviour
 {
     public int healthAmount = 20; // Health amount to restore
+    public AudioClip pickupSound; // Assign the pickup sound effect in the Inspector
+
+    private AudioSource audioSource;
+
+    private void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -15,7 +23,11 @@ public class HealthPickup : MonoBehaviour
             if (playerHealth != null)
             {
                 playerHealth.Heal(healthAmount); // Restore the player's health
-                Destroy(gameObject); // Remove the health pickup object
+
+                // Play the pickup sound effect
+                audioSource.PlayOneShot(pickupSound);
+
+                Destroy(gameObject); // Remove the HealthPickup object
             }
         }
     }

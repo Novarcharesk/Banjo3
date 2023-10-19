@@ -5,51 +5,60 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    public Text inventoryText;  // Assign the UI Text element to display the inventory
+    public static GameManager instance; // Singleton instance
+    public Text healthText;  // Assign the UI Text element for health
+    public Text scoreText;  // Assign the UI Text element for score
 
-    private Dictionary<string, int> inventory = new Dictionary<string, int>();
+    private int playerHealth = 100; // Initialize the player's health
+    private int playerScore = 0; // Initialize the player's score
 
-    // Add an item to the inventory
-    public void AddItem(string itemName)
+    private void Awake()
     {
-        if (inventory.ContainsKey(itemName))
+        if (instance == null)
         {
-            inventory[itemName]++;
+            instance = this;
         }
         else
         {
-            inventory[itemName] = 1;
+            Destroy(gameObject);
         }
-
-        UpdateInventoryUI();
     }
 
-    // Remove an item from the inventory
-    public void RemoveItem(string itemName)
+    private void Start()
     {
-        if (inventory.ContainsKey(itemName))
-        {
-            inventory[itemName]--;
+        // Set the initial UI text to display player's health and score
+        healthText.text = "Health: " + playerHealth.ToString();
+        scoreText.text = "Score: " + playerScore.ToString();
 
-            if (inventory[itemName] <= 0)
-            {
-                inventory.Remove(itemName);
-            }
-
-            UpdateInventoryUI();
-        }
+        // Add any other initialization code here
     }
 
-    // Update the inventory UI text
-    private void UpdateInventoryUI()
+    public void TakeDamage(int damageAmount)
     {
-        string inventoryInfo = "Inventory:\n";
+        playerHealth -= damageAmount;
+        // Update the UI element to display the current playerHealth
+        healthText.text = "Health: " + playerHealth.ToString();
 
-        foreach (var item in inventory)
-        {
-            inventoryInfo += $"{item.Key}: {item.Value}\n";
-        }
-
-        inventoryText.text = inventoryInfo;
+        // Add any additional logic for taking damage
     }
+
+    public void Heal(int healAmount)
+    {
+        playerHealth += healAmount;
+        // Update the UI element to display the current playerHealth
+        healthText.text = "Health: " + playerHealth.ToString();
+
+        // Add any additional logic for healing
+    }
+
+    public void AddPoints(int pointsToAdd)
+    {
+        playerScore += pointsToAdd;
+        // Update the UI element to display the current playerScore
+        scoreText.text = "Score: " + playerScore.ToString();
+
+        // Add any additional scoring logic
+    }
+
+    // Add any other game management functions and logic here
 }
